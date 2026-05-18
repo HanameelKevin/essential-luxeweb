@@ -444,8 +444,28 @@
         }
 
         @media (max-width: 1024px) {
-            nav { position: absolute; }
+            nav { 
+                position: fixed; 
+                background: rgba(15, 17, 26, 0.95);
+                backdrop-filter: blur(10px);
+                padding: 20px 5vw;
+                transition: transform 0.4s var(--ease-quint);
+            }
+            nav.nav-hidden {
+                transform: translateY(-100%);
+            }
             .nav-logo { display: none; }
+            .nav-links { 
+                display: flex; 
+                gap: 1.5rem; 
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .nav-links a {
+                font-size: 0.55rem;
+                opacity: 0.8;
+            }
             .section-luxe { padding: 8rem 5vw; }
             .hero-title-wrap { flex-direction: column; text-align: center; gap: 3rem; }
             .luxe-crest { width: 260px; height: 260px; }
@@ -759,6 +779,27 @@
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
+
+        // Smart Nav Scroll Behavior
+        let lastScroll = 0;
+        const nav = document.querySelector('nav');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll <= 0) {
+                nav.classList.remove('nav-hidden');
+                return;
+            }
+            
+            if (currentScroll > lastScroll && !nav.classList.contains('nav-hidden')) {
+                // Scroll Down
+                nav.classList.add('nav-hidden');
+            } else if (currentScroll < lastScroll && nav.classList.contains('nav-hidden')) {
+                // Scroll Up
+                nav.classList.remove('nav-hidden');
+            }
+            lastScroll = currentScroll;
+        });
 
         // Chatbot Logic
         const chatTrigger = document.getElementById('chatTrigger');
